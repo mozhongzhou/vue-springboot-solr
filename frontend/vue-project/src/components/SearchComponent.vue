@@ -33,7 +33,7 @@
     </div>
 
     <!-- 搜索结果 -->
-    <div v-if="results.length > 0" class="search-results">
+    <div v-if="results && results.length > 0" class="search-results">
       <div v-for="result in results" :key="result.id" class="result-card">
         <h3 v-if="result.company" v-html="result.company"></h3>
         <div v-if="result.address" class="result-field">
@@ -52,7 +52,7 @@
     </div>
 
     <!-- 无结果提示 -->
-    <div v-else-if="!loading && query && !error" class="no-results">
+    <div v-else-if="results && !loading && query && !error" class="no-results">
       未找到相关结果
     </div>
   </div>
@@ -68,7 +68,7 @@ export default {
   data() {
     return {
       query: "",
-      results: [],
+      results: null,
       loading: false,
       error: null,
       isConnected: false,
@@ -95,7 +95,6 @@ export default {
 
       this.loading = true;
       this.error = null;
-      this.results = [];
 
       try {
         const response = await axios.get(`${API_BASE_URL}/search`, {
